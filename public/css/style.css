@@ -1,0 +1,86 @@
+.list-group-item {
+    border: none;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    
+}
+.list-group-item:first-child {
+    border-top: none;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.current-chat {
+    border: 1px solid #ddd;
+    margin-right: 0px;
+}
+
+.current-chat-area {
+    padding-top: 10px;
+    overflow: auto;
+    height: 98vh;
+    width: auto;
+    padding-bottom: 30px;
+}
+
+.current-chat-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    right: 0;
+}
+
+.penn-state-logo {
+    max-height: 100%;
+    max-width: 100%;
+    margin: auto;
+    display: block;
+}
+
+.watson-introduction {
+    text-align: center;
+    font-size: 25px;
+    margin-top: 10px;
+}
+
+.drop-down-info {
+    margin-bottom: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.remove-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.side-bar {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.body-text {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.full-body row {
+    margin-right: 0px;
+    margin-bottom: 0px;
+}
+
+.media-text {
+    margin-bottom: 0px;
+}
+
+hr { 
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+    width: auto;
+}

@@ -1,8 +1,4 @@
 // Written by Daniel Kovalevich
-/*
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';*/
 
 // THis is for the collapsible nav bars
 $(document).ready(function(){
@@ -23,7 +19,6 @@ $(document).ready(function(){
     // Update the first Watson message
     $("#Watson-Time").html('Watson | ' + getDateAndTime());
 });
-
 
 //--------------------------------------------- Helper Functions ---------------------------------------------------------------------------
 function getDateAndTime() {
@@ -69,16 +64,27 @@ function getDateAndTime() {
 function addUserChat() {
     var question = $('#question').val();
     var date = getDateAndTime();
-    if (question != "") {
+
+    // Regex checks if the string sent isn't only spaces
+    if (/\S/.test(question)) {
         $('#chat').append('<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="icons/user.svg" width="50" height="50"></div><div class="media-body">'
             + question + '<br><small class="text-muted">You | ' + getDateAndTime() + '</small></div></div></div></li><hr>'
         );
-    }
 
-    // Clears value in input field
-    $("#question").val('');
+    $.ajax({
+        url: 'http://localhost:8080',
+        type: 'POST',
+        data: {
+            "ques" : question
+        },
+    });
 
     // scrolls to the bottom of the chat
     $('.current-chat-area').animate({
         scrollTop: $("#bottom-chat").offset().top});
+    
+    }
+
+    // Clears value in input field
+    $('#question').val('');
 }

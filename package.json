@@ -20,7 +20,10 @@
   },
   "homepage": "https://github.com/DanielKovalevich/Research-Watson#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "mongodb": "^1.4.40",
-    "watson-developer-cloud": "^2.31.1"
+    "socket.io": "^2.0.1",
+    "watson-developer-cloud": "^2.31.1",
+    "xmlhttprequest": "^1.8.0"
   }
 }

@@ -30,61 +30,82 @@ function getDateAndTime() {
     var minutes = date.getMinutes();
     var time;
 
-    if (minutes < 10) {
+    if (minutes < 10)
         minutes = '0' + minutes;
-    }
 
-    if (hour > 12) {
+    if (hour > 12)
         time = hour - 12 + ':' + minutes + 'pm';
-    } 
-    else {
+    else
         time = hour + ':' + minutes + 'am';
-    }
     
     month = months[month];
 
     // Formatting the date
-    if (day == 1 || day == 21) {
+    if (day == 1 || day == 21)
         day = day + 'st';
-    }
-    else if (day == 2 || day == 22) {
+    else if (day == 2 || day == 22)
         day = day + 'nd';
-    }
-    else if (day == 3 || day == 23) {
+    else if (day == 3 || day == 23)
         day = day + 'rd';
-    }
-    else {
+    else
         day = day + 'th';
-    }
 
     return day + ' of ' + month + ' at ' + time;
 }
 
-// This adds the user input to the chat
+//Just to condense the append functions
+var htmlBefore = '<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="icons/user.svg" width="50" height="50"></div><div class="media-body">';
+var htmlWBefore = '<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="icons/watson.png" width="50" height="50"></div><div class="media-body">'
+var htmlAfter = '</small></div></div></div></li><hr>';
+
+// This adds the user input to the chat and sends it to server for response
 function addUserChat() {
-    var question = $('#question').val();
+    var question = {};
+    question.title = $('#question').val();
     var date = getDateAndTime();
 
     // Regex checks if the string sent isn't only spaces
-    if (/\S/.test(question)) {
-        $('#chat').append('<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="icons/user.svg" width="50" height="50"></div><div class="media-body">'
-            + question + '<br><small class="text-muted">You | ' + getDateAndTime() + '</small></div></div></div></li><hr>'
-        );
+    if (/\S/.test(question.title)) {
+        $('#chat').append(htmlBefore + question.title + '<br><small class="text-muted">You | ' + getDateAndTime() + htmlAfter);
 
-    $.ajax({
-        url: 'http://localhost:8080',
-        type: 'POST',
-        data: {
-            "ques" : question
-        },
-    });
+        sendServerQuestion(question);
+        getDataFromServer();
 
-    // scrolls to the bottom of the chat
-    $('.current-chat-area').animate({
-        scrollTop: $("#bottom-chat").offset().top});
-    
+        // scrolls to the bottom of the chat
+        $('.current-chat-area').animate({scrollTop: $("#bottom-chat").offset().top});
     }
-
     // Clears value in input field
     $('#question').val('');
+}
+
+function sendServerQuestion(question) {
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost:8080/',
+        data: question,
+        success: function (data) {
+            console.log(data);
+            
+        },  
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error.message);
+        }
+    });
+}
+
+function getDataFromServer() {
+    $.ajax({
+        url: "data1",
+        type: "get",
+        // Manipulate data here.
+        success: function(data) {
+            console.log(data);
+            $('#chat').append(htmlWBefore + data + '<br><small class="text-muted">Watson | ' + getDateAndTime() + htmlAfter);
+            // scrolls to the bottom of the chat
+            $('.current-chat-area').animate({scrollTop: $("#bottom-chat").offset().top});
+        },
+        error: function (req, text_status, error) {
+            console.log('Error: ' + error.message);
+        }
+    });
 }

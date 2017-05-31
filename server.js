@@ -1,71 +1,43 @@
-/*var app = require('http').createServer(handler),
-    io = require('socket.io')(app),
-    fs = require('fs'),
-    url = require('url');
-
-app.listen(8080, '127.0.0.1');
-
-function handler (req, res) {
-    if(req.url.indexOf('.html') != -1) { //req.url has the pathname, check if it conatins '.html'
-        fs.readFile(__dirname + '/public/index.html',
-        function (err, data) {
-            if (err) {
-            res.writeHead(500);
-            console.log('Something went wrong with rendering the page!');
-            return res.end('Error loading index.html');
-            }
-            res.writeHead(200, {'Content-Type': 'text/html'});
-            res.end(data);
-        });
-    }
-
-    if(req.url.indexOf('.css') != -1) { //req.url has the pathname, check if it conatins '.css'
-        fs.readFile(__dirname + '/public/css/style.css', function (err, data) {
-            if (err) console.log(err);
-            res.writeHead(200, {'Content-Type': 'text/css'});
-            res.write(data);
-            res.end();
-        });
-
-    }
-}
-
-console.log('Server is now running at http://127.0.0.1:8080/');*/
+// Written by Daniel Kovalevich
+// Purpose: Learn more about Watson
+// Last Edit: 05/30/17
 
 var express = require('express');
 var bodyParser = require('body-parser');
-//var Q = require("q");
 var app = express();
 var question;
 var path = __dirname + '/public/';
 
-// Used this to stop a stupid error message
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(bodyParser.urlencoded({extended: true}));
+
 // Logs the request methods to the site
 app.use(function (req,res,next) {
   console.log("/" + req.method);
   next();
 });
+
 // Loads up all the pages and such
 app.use(express.static(path));
 // application/json parser
 var jsonParser = bodyParser.json();
 
+app.listen(8080, () => console.log('Listening on http://localhost:8080/'));
+
 //-------------------------------Methods---------------------------------//
+// Used to receive data from client
 app.post('/', jsonParser, function(req, res) {
     console.log(req.body.title);
     question = req.body.title;
     res.send('Server received question');
 });
 
+// Used to send data to client
 app.get('/data1', async(req, res) => {
     Watson(res, question);
 });
 //----------------------------------------------------------------------//
-
-app.listen(8080, () => console.log('Listening on http://localhost:8080/'));
 
 //------------------------------ Handling Errors --------------------------------------------//
 
@@ -107,14 +79,15 @@ app.use(function(err, req, res, next) {
 //--------------------------------------- Watson Services --------------------------------------//
 // Kick off function
 function Watson(res, question){
-    WatsonNLP(question, (response) => {
-        res.send(response);
-    }
-    );
+    WatsonNaturalLanguageProcessing(question, (keyword) => {
+        WatsonRetrieveRank(keyword, (response) => res.send(response));
+    }, () => res.send('I\'m sorry. Can you please rephrase the question? I\'m still learning.'));
+
+    
 };
     
 
-function WatsonC() {
+function WatsonCoversation() {
     var ConversationV1 = require('watson-developer-cloud/conversation/v1');
 
     var conversation = new ConversationV1({
@@ -135,27 +108,7 @@ function WatsonC() {
     });
 }
 
-function WatsonD() {
-    var DiscoveryV1 = require('watson-developer-cloud/discovery/v1');
-
-    var discovery = new DiscoveryV1({
-    username: '<username>',
-    password: '<password>',
-    version_date: DiscoveryV1.VERSION_DATE_2017_04_27
-    });
-
-    discovery.query({
-        environment_id: '<environment_id>',collection_id: '<collection_id>',query: 'my_query'
-        }, function(err, response) {
-            if (err) {
-                console.error(err);
-            } else {
-                console.log(JSON.stringify(response, null, 2));
-            }
-    });
-}
-
-function WatsonNLP(question, callback) {
+function WatsonNaturalLanguageProcessing(question, callback, errorCallback) {
     var NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
     var natural_language_understanding = new NaturalLanguageUnderstandingV1({
     'username': '00a62a36-a58a-492a-a052-85d7d779e83d',
@@ -168,15 +121,8 @@ function WatsonNLP(question, callback) {
         'text': question,
         'features': {
             'keywords': {
-                'sentiment': true,
+                'sentiment': false,
                 'limit': 5
-            },
-            'concepts': {
-                'limit': 3
-            },
-            'entities': {
-                'sentiment': true,
-                'limit': 1
             }
         }
     };
@@ -185,18 +131,52 @@ function WatsonNLP(question, callback) {
     natural_language_understanding.analyze(parameters, function(err, response) {
     if (err) {
         console.log('error:', err);
+        errorCallback(err);
     }
     else{
-        callback(JSON.stringify(response, null, 2));
+        // Combine all returned keywords from questions in order to send to the Retrieve and Rank function
+        var retrievedKeywords;
+        console.log(response.keywords);
+        for (var i in response.keywords) {
+            retrievedKeywords = retrievedKeywords != undefined ? retrievedKeywords + ' ' + response.keywords[i].text : response.keywords[i].text;
+        }
+        console.log(retrievedKeywords);
+        callback(response.keywords[0].text);
     }
     });
 }
 
-function WatsonRR() {
+function WatsonRetrieveRank(question, callback) {
     var watson = require('watson-developer-cloud');
+    var RetrieveAndRankV1 = require('watson-developer-cloud/retrieve-and-rank/v1');
     var retrieve_and_rank = watson.retrieve_and_rank({
-    username: '1368f41a-0119-40dc-8428-2b3cb4edae99',
-    password: 'WrX74uZ2Asmc',
-    version: 'v1'
+        username: '1368f41a-0119-40dc-8428-2b3cb4edae99',
+        password: 'WrX74uZ2Asmc',
+        version: 'v1'
     });
+
+    var solrClient = retrieve_and_rank.createSolrClient({
+        cluster_id: 'sc73683d04_ce80_4c4c_aa66_547833c996d0',
+        collection_name: 'Research'
+    });
+
+    console.log('Searching all documents.');
+    var query = solrClient.createQuery();
+    query.q({ 'body' : question });
+
+    solrClient.search(query, function(err, searchResponse) {
+    if(err) {
+        console.log('Error searching for documents: ' + err);
+    }
+        else {
+        console.log('Found ' + searchResponse.response.numFound + ' documents.');
+        //console.log('First document: ' + JSON.stringify(searchResponse.response.docs[0], null, 2));
+        var jsonResponse = searchResponse.response.docs[0];
+        console.log(jsonResponse);
+        jsonResponse = jsonResponse['title'] + ' ' + jsonResponse['contentHtml'];
+        callback(jsonResponse);
+        }
+    });
+
+
 }

@@ -156,7 +156,7 @@ function WatsonRetrieveRank(question, callback) {
     });
 
     var solrClient = retrieve_and_rank.createSolrClient({
-        cluster_id: 'sc73683d04_ce80_4c4c_aa66_547833c996d0',
+        cluster_id: 'sc514d7838_1d1d_4381_85d8_46c010e76be2',
         collection_name: 'Research'
     });
 

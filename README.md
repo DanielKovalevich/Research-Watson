@@ -4,6 +4,7 @@ This is a simplistic research project which involves integrating Watson into a c
 - Where is the admission's office?
 - How can I contact the financial aid office?
 - How are the parking ticket funds used?
+- What classes should I take for my first semester in Computer Science?
 
 ### Support or Contact
 

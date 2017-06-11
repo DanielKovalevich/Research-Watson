@@ -9,9 +9,9 @@
     <meta name="description" content="">
     <meta name="author" content="Daniel Kovalevich">
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
@@ -26,6 +26,10 @@
                 <div class="list-group-item open-request">
                     <p class="watson-introduction">Welcome to Watson Virtual Assistant!</p>
                 </div>
+                <div class="col-md-12 center login">
+                    <button class="btn btn-default" type="button">Login</button>
+                    <button class="btn btn-default" type="button">Register</button>
+                </div>
                 <div class="col-md-12 drop-down-info">
                     <ul class="collapsible" data-collapsible="accordion">
                         <li>
@@ -34,6 +38,8 @@
                             <span>
                                 This is an tool that faciliates the lives of college freshmen.
                                 Ask any question relating to a major or the Behrend campus, and Watson will do his best to answer the question.
+                                <br>
+                                This is hoped to be the beginning of something greater. 
                             </span>
                         </div>
                         </li>
@@ -43,8 +49,17 @@
                             <span>
                                 <ul>
                                     <li>Who is Dr. Meng Su?</li>
-                                    <li>Where is the Burke building?</li>
-                                    <li>What clubs are at Behrend?</li>
+                                    <li>Who is the Chancellor of the school?</li>
+                                    <li>How many clubs are at Behrend?</li>
+                            </span>
+                        </div>
+                        </li>
+                        <li>
+                        <div class="collapsible-header"><i class="material-icons">error</i>Watson didn't answer my question!</div>
+                        <div class="collapsible-body">
+                            <span>
+                                Watson is still learning and he doesn't have all the data in the world.
+                                If you do see some inconsistencies, be sure to email Daniel Kovalevich.
                             </span>
                         </div>
                         </li>
@@ -63,7 +78,7 @@
         <div class="col-md-9 current-chat">
             <div class="row current-chat-area">
                 <div class="col-md-12 scroll-chat">
-                      <ul class="media-list" id="chat">
+                    <ul class="media-list" id="chat">
                         <li class="media">
                             <div class="media-body">
                                 <div class="media">

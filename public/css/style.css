@@ -16,11 +16,15 @@
 }
 
 .current-chat-area {
-    padding-top: 10px;
+    padding-top: 5px;
     overflow: auto;
-    height: 98vh;
+    height: 97.5vh;
     width: auto;
-    padding-bottom: 35px;
+    margin-bottom: 20px;
+}
+
+.scroll-chat {
+    margin-bottom: 40px;
 }
 
 .current-chat-footer {
@@ -28,6 +32,7 @@
     bottom: 0;
     width: 100%;
     right: 0;
+    margin-top: 10px;
 }
 
 .penn-state-logo {
@@ -74,6 +79,13 @@
     margin-bottom: 0px;
 }
 
+.login {
+    margin-top: 10px;
+    padding: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 hr { 
     display: block;
     margin-top: 0.5em;
@@ -83,4 +95,8 @@ hr {
     border-style: inset;
     border-width: 1px;
     width: auto;
+}
+
+p {
+    margin-bottom: 0px;
 }

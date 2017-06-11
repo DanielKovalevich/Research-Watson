@@ -70,9 +70,6 @@ function addUserChat() {
 
         sendServerQuestion(question);
         getDataFromServer();
-
-        // scrolls to the bottom of the chat
-        $('.current-chat-area').animate({scrollTop: $("#bottom-chat").offset().top});
     }
     // Clears value in input field
     $('#question').val('');
@@ -85,7 +82,8 @@ function sendServerQuestion(question) {
         data: question,
         success: function (data) {
             console.log(data);
-            
+            // scrolls to the bottom of the chat
+            $('.current-chat-area').animate({scrollTop: $(".scroll-chat").height()});
         },  
         error: function (xhr, status, error) {
             console.log('Error: ' + error.message);
@@ -100,9 +98,9 @@ function getDataFromServer() {
         // Manipulate data here.
         success: function(data) {
             console.log(data);
-            $('#chat').append(htmlWBefore + data + '<br><small class="text-muted">Watson | ' + getDateAndTime() + htmlAfter);
+            $('#chat').append(htmlWBefore + data + '<small class="text-muted">Watson | ' + getDateAndTime() + htmlAfter);
             // scrolls to the bottom of the chat
-            $('.current-chat-area').animate({scrollTop: $("#bottom-chat").offset().top});
+            $('.current-chat-area').animate({scrollTop: $(".scroll-chat").height()});
         },
         error: function (req, text_status, error) {
             console.log('Error: ' + error.message);

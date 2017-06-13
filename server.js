@@ -53,25 +53,35 @@ app.get('/data1', function(req, res) {
 mongoose.connect("mongodb://localhost:27017/data");
 var db = mongoose.connection;
 db.once('open', () => console.log("Connected to Database"));
-db.on('error', (err) => console.log("Database Error: " + err));
+db.on('error', (err) => console.log("Database Connection Error"));
 
+// creates a model for all the users in database
 var Schema = mongoose.Schema;
-var user = new Schema({
-    username:String,
-    password:String,
-    email:String,
-    first_name:String,
-    last_name:String,
+var UserSchema = new Schema({
+    username:{
+        type: String,
+        required: true,
+        index: {
+            unique: true
+        }
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    first_name: String,
+    last_name: String,
     major: {
         type:String,
         lowercase: true
     }
 });
-var User = mongoose.model('user', user);
 
 // hashes the password asynchronously before saving
-user.pre('save', function(next){
+UserSchema.pre('save', function(next) {
+    console.log('encrypting password ...')
     var user = this;
+    // only hash password if it has been modified or is new
     if (!user.isModified('password')) return next();
 
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt){
@@ -82,6 +92,33 @@ user.pre('save', function(next){
             user.password = hash;
             next();
         });
+    });
+});
+
+var User = mongoose.model('User', UserSchema);
+
+// checks the database for the same username
+app.post('/validateUsername', function(req, res) {
+    var username = req.body.username;
+    User.findOne({'username': username }, function(err, person) {
+        res.send(person === null);
+    });
+});
+
+app.post('/register', function(req, res) {
+    console.log(req.body);
+    var newUser = new User({
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        major: req.body.major,
+        username: req.body.username,
+        password: req.body.password
+    });
+
+    newUser.save(function (err) {
+        if (err) throw (err);
+        console.log('User registered');
+        res.redirect('/');
     });
 });
 //--------------------------End of Database Manipulation-------------------//

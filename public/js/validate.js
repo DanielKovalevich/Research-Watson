@@ -5,12 +5,25 @@ $(document).ready(function () {
         // makes sure it validates without submitting
         onsubmit: false,
         rules: {
-            first_name: "required",
-            last_name: "required",
-            major: "required",
+            first_name: {
+                required: true,
+                lettersonly: true
+            },
+            last_name: {
+                required: true,
+                lettersonly: true
+            },
+            major: {
+                required: true
+            },
             username: {
                 required: true,
-                email: true
+                alphanumeric: true,
+                minlength: 3,
+                remote: {
+                    url:'validateUsername',
+                    type: 'post'
+                }
             },
             password: {
                 required: true,
@@ -19,49 +32,49 @@ $(document).ready(function () {
             },
             passwordConfirm: {
                 required: true,
-                minlength: 6,
-                equalTo: "#password"
+                equalTo: '#password'
             },
             rememberMe: {
-
+                required: false
             }
         },
+        // displays these messages when error come up
         messages: {
-            first_name: "Please enter you first name",
-            last_name: "Please enter you last name",
-            major: "Please enter in a Major",
-            username: "The username helps us distinguish you",
+            first_name: {
+                required: 'Please enter you first name',
+                lettersonly: 'I don\'t believe your name contains letters'
+            },
+            last_name: {
+                required: 'Please enter you last name',
+                lettersonly: 'I don\'t believe your name contains letters'
+            },
+            major: {
+                required: 'Please enter in a major',
+            },
+            username: {
+                required: 'The username helps us distinguish you',
+                alphanumeric: 'No special characters allowed',
+                remote: 'Sorry that username is already taken',
+                minlength: 'Your username needs to be at least three characters',
+            },
             password: {
-                required: "Please provide a password",
-                minlength: "Your password must be at least 6 characters long"
+                required: 'Please provide a password',
+                minlength: 'Your password must be at least 6 characters long'
             },
             passwordConfirm: {
-                required: "Please provide a password",
-                equalTo: "Please enter the same password as above",
+                required: 'Please provide a password',
+                equalTo: 'Please enter the same password as above',
             }
         },
-        errorElement: "em",
+        errorElement:'div',
         errorPlacement: function(error, element) {
-            // Add the `help-block` class to the error element
-            error.addClass('help-block');
-            if (element.prop("type") === "checkbox") {
-                error.insertAfter(element.parent("label"));
+            var placement = $(element).data('error');
+            if (placement) {
+                $(placement).append(error)
             } else {
                 error.insertAfter(element);
             }
-        },
-        highlight: function(element, errorClass, validClass) {
-            $(element).parents('.col-md-6').addClass('has-error').removeClass('has-success');
-            $(element).parents('.col-md-12').addClass('has-error').removeClass('has-success');
-        },
-        unhighlight: function(element, errorClass, validClass) {
-            $(element).parents('.col-md-6').addClass('has-success').removeClass('has-error');
-            $(element).parents('.col-md-12').addClass('has-success').removeClass('has-error');
         }
-        /*
-        submitHandler: function(form) {
-            $('#signup-form').ajaxSubmit();
-        }*/
     });
 
 });

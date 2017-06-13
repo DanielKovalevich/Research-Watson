@@ -106,8 +106,14 @@
     text-shadow: 2px 2px 4px #b2b2b2;
 }
 
-.form-group .row {
+#signup-form > .row {
     margin-bottom: 0px;
+}
+
+.error {
+    position: relative;
+    font-size: 0.8rem;
+    color: red;
 }
 
 hr { 

@@ -86,6 +86,30 @@
     margin-right: auto;
 }
 
+.login form {
+    display: inline;
+}
+
+.signup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.register-line {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+.header h2 {
+    text-shadow: 2px 2px 4px #b2b2b2;
+}
+
+.form-group .row {
+    margin-bottom: 0px;
+}
+
 hr { 
     display: block;
     margin-top: 0.5em;

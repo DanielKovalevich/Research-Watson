@@ -22,7 +22,7 @@ app.engine('html', fileRender);
 app.set('view engine', 'html');
 app.use(bodyParser.urlencoded({extended: true}));
 
-// Checks if user is logged in
+// Checks if user is logged in (Not yet implemented)
 app.use(function (req,res,next) {
     next();
 });

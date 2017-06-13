@@ -75,6 +75,8 @@ function addUserChat() {
     $('#question').val('');
 }
 
+//--------------------------------------------------- Sending / Receiving Data --------------------------------------------------------------------//
+
 function sendServerQuestion(question) {
     $.ajax({
         type: 'POST',

@@ -95,6 +95,14 @@ UserSchema.pre('save', function(next) {
     });
 });
 
+// Allows verification of password with the schema
+UserSchema.methods.comparePassword = function(candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+        if (err) return cb(err);
+        cb(null, isMatch);
+    });
+};
+
 var User = mongoose.model('User', UserSchema);
 
 // checks the database for the same username
@@ -106,7 +114,6 @@ app.post('/validateUsername', function(req, res) {
 });
 
 app.post('/register', function(req, res) {
-    console.log(req.body);
     var newUser = new User({
         first_name: req.body.first_name,
         last_name: req.body.last_name,
@@ -119,6 +126,23 @@ app.post('/register', function(req, res) {
         if (err) throw (err);
         console.log('User registered');
         res.redirect('/');
+    });
+});
+
+app.post('/login', function(req, res) {
+    User.findOne({username: req.body.username}, function(err, user) {
+        if (err) throw err;
+        user.comparePassword(req.body.password, function(err, isMatch) {
+            if (err) throw err;
+            console.log(req.body.password + ':', isMatch);
+
+            if (isMatch) {
+                res.redirect('/');
+            }
+            else {
+                res.send('Bad login request!');
+            }
+        });
     });
 });
 //--------------------------End of Database Manipulation-------------------//

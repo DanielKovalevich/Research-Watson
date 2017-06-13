@@ -21,7 +21,7 @@ $(document).ready(function () {
                 alphanumeric: true,
                 minlength: 3,
                 remote: {
-                    url:'validateUsername',
+                    url:'../validateUsername',
                     type: 'post'
                 }
             },

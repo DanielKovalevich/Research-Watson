@@ -54,8 +54,8 @@ function getDateAndTime() {
 }
 
 //Just to condense the append functions
-var htmlBefore = '<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="icons/user.svg" width="50" height="50"></div><div class="media-body">';
-var htmlWBefore = '<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="icons/watson.png" width="50" height="50"></div><div class="media-body">'
+var htmlBefore = '<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="../icons/user.svg" width="50" height="50"></div><div class="media-body">';
+var htmlWBefore = '<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="../icons/watson.png" width="50" height="50"></div><div class="media-body">'
 var htmlAfter = '</small></div></div></div></li><hr>';
 
 // This adds the user input to the chat and sends it to server for response

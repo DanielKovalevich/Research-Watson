@@ -46,6 +46,11 @@ app.post('/', jsonParser, function(req, res) {
 app.get('/data1', function(req, res) {
     Watson(res, question);
 });
+
+app.get('/logout', function (req, res) {
+  delete req.session.user_id;
+  res.redirect('/');
+});
 //--------------------------------End of Methods-----------------------------//
 //-----------------------Database Manipulation-----------------------------//
 // note to self: use net start MongoDB to start database server
@@ -137,7 +142,7 @@ app.post('/login', function(req, res) {
             console.log(req.body.password + ':', isMatch);
 
             if (isMatch) {
-                res.redirect('/');
+                res.redirect('/loggedIn.html');
             }
             else {
                 res.send('Bad login request!');

@@ -1,7 +1,14 @@
 // Written by Daniel Kovalevich
 
-// THis is for the collapsible nav bars
+//Just to condense the append functions
+var htmlBefore = '<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="../icons/user.svg" width="50" height="50"></div><div class="media-body">';
+var htmlWBefore = '<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="../icons/watson.png" width="50" height="50"></div><div class="media-body">'
+var htmlAfter = '</small></div></div></div></li><hr>';
+
+// this holds the session information
+var session;
 $(document).ready(function(){
+    // This is for the collapsible nav bars
     $('.collapsible').collapsible();
 
     $('#send').click(function(){
@@ -16,8 +23,17 @@ $(document).ready(function(){
         }
     });
 
-    // Update the first Watson message
-    $("#Watson-Time").html('Watson | ' + getDateAndTime());
+    $.ajax({
+        url: 'getSession',
+        method: 'get',
+        success: function(data) {
+            session = data;
+            $('#chat').append(htmlWBefore + 'Hello ' +  session.name + '. How have you been?<br>' + '<small class="text-muted">Watson | ' + getDateAndTime() + htmlAfter);
+        },
+        error: function() {
+            $('#chat').append(htmlWBefore + 'You must be logged in to utilize the conversation API.<br>' + '<small class="text-muted">Watson | ' + getDateAndTime() + htmlAfter);
+        }
+    });
 });
 
 //--------------------------------------------- Helper Functions ---------------------------------------------------------------------------
@@ -53,11 +69,6 @@ function getDateAndTime() {
     return day + ' of ' + month + ' at ' + time;
 }
 
-//Just to condense the append functions
-var htmlBefore = '<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="../icons/user.svg" width="50" height="50"></div><div class="media-body">';
-var htmlWBefore = '<li class="media"><div class="media-body"><div class="media"><div class="pull-left"><img class="media-object img-circle " src="../icons/watson.png" width="50" height="50"></div><div class="media-body">'
-var htmlAfter = '</small></div></div></div></li><hr>';
-
 // This adds the user input to the chat and sends it to server for response
 function addUserChat() {
     var question = {};
@@ -66,7 +77,7 @@ function addUserChat() {
 
     // Regex checks if the string sent isn't only spaces
     if (/\S/.test(question.title)) {
-        $('#chat').append(htmlBefore + question.title + '<br><small class="text-muted">You | ' + getDateAndTime() + htmlAfter);
+        $('#chat').append(htmlBefore + question.title + '<br><small class="text-muted">' + session.name + ' ' + session.lname + ' | ' + getDateAndTime() + htmlAfter);
 
         sendServerQuestion(question);
         getDataFromServer();
@@ -75,12 +86,10 @@ function addUserChat() {
     $('#question').val('');
 }
 
-//--------------------------------------------------- Sending / Receiving Data --------------------------------------------------------------------//
-
 function sendServerQuestion(question) {
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/',
+        url: 'loggedIn',
         data: question,
         success: function (data) {
             // scrolls to the bottom of the chat
@@ -98,6 +107,7 @@ function getDataFromServer() {
         type: "get",
         // Manipulate data here.
         success: function(data) {
+            console.log(data);
             $('#chat').append(htmlWBefore + data + '<small class="text-muted">Watson | ' + getDateAndTime() + htmlAfter);
             // scrolls to the bottom of the chat
             $('.current-chat-area').animate({scrollTop: $(".scroll-chat").height()});

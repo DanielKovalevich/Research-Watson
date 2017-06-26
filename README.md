@@ -1,4 +1,4 @@
-## Welcome to the Watson Research
+## Welcome to my Watson Virtual Advisor
 
 This is a simplistic research project which involves integrating Watson into a chatbot to assist incoming or current college freshmen. It handles many questions such as:
 - Where is the admission's office?
